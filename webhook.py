@@ -129,7 +129,7 @@ async def webhook(req: Request):
 
                 await bot.send_message(
                     chat_id=user_id,
-                    ext="""
+                    text="""
 برای استفاده از ربات، لطفاً در هر دو کانال عضو شوید:
 
 📢 کانال اول: AIChatgptb
