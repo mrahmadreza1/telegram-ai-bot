@@ -81,7 +81,12 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
+@app.get("/")
+async def home():
+    return {
+        "status": "online",
+        "message": "Telegram AI Bot is running"
+    }
 @app.post("/webhook")
 async def webhook(req: Request):
 
