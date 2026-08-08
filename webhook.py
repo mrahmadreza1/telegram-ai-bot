@@ -14,22 +14,28 @@ bot = telegram.Bot(token=BOT_TOKEN)
 
 
 async def is_user_member(user_id):
-    for chanel in CHANNELS:
+    for channel in CHANNELS:
         try:
             member = await bot.get_chat_member(
-                chat_id=chanel,
+                chat_id=channel,
                 user_id=user_id
             )
-            if member.status not in [
-                "member",
-                "administrator",
-                "creator"
-            ]:
-                return False
-            
 
-        except Exception:
+            print(
+                f"CHANNEL: {channel} | "
+                f"USER: {user_id} | "
+                f"STATUS: {member.status}"
+            )
+
+            if member.status not in ["member", "administrator", "creator"]:
+                return False
+
+        except Exception as e:
+            print(
+                f"MEMBERSHIP ERROR: {channel} | {e}"
+            )
             return False
+
     return True
 
 
@@ -105,43 +111,44 @@ async def webhook(req: Request):
 
         user_id = update.message.chat.id
         text = update.message.text
-        print(f"NEW MESSAGE: user={user_id}, text={text}")
 
-        if not await is_user_member(user_id):
-        
-                keyboard = InlineKeyboardMarkup([
-                    [
-                        InlineKeyboardButton(
-                        "📢 AI عضویت در کانال",
+        member_status = await is_user_member(user_id)
+
+        print(
+            f"USER: {user_id} | MEMBER: {member_status}"
+        )
+
+        if not member_status:
+
+            keyboard = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton(
+                        "📢 عضویت در AIChatgptb",
                         url="https://t.me/AIChatgptb"
-                    )],
-
-                    [
-                        InlineKeyboardButton(
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
                         "⚽ عضویت در Football Persian",
-                        url="@FotballPersian"
-                        )
-                    ]
-                
+                        url="https://t.me/FootballPersian"
+                    )
+                ]
+            ])
 
-                ])
+            await bot.send_message(
+                chat_id=user_id,
+                text=(
+                    "🚫 برای استفاده از ربات باید عضو هر دو کانال باشید.\n\n"
+                    "📢 کانال اول: AIChatgptb\n"
+                    "⚽ کانال دوم: Football Persian\n\n"
+                    "بعد از عضویت دوباره پیام بدهید."
+                ),
+                reply_markup=keyboard
+            )
 
+            return {"ok": True}
 
-
-                await bot.send_message(
-                    chat_id=user_id,
-                    text="""
-برای استفاده از ربات، لطفاً در هر دو کانال عضو شوید:
-
-📢 کانال اول: AIChatgptb
-⚽ کانال دوم: Football Persian
-
-بعد از عضویت، دوباره پیام خود را ارسال کنید 👇
-""",
-                    reply_markup=keyboard
-                )
-        
-                return {"ok": True}
+        # فقط کاربران عضو به این قسمت می‌رسند
         add_message(
             user_id,
             "user",
@@ -162,6 +169,3 @@ async def webhook(req: Request):
             user_id,
             answer
         )
-
-    return {"ok": True}
-
