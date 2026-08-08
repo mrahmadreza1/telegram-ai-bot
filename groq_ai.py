@@ -12,7 +12,9 @@ def ask_ai(history):
         messages=[
             {
                 "role":"system",
-                "content":"You are a helpful Persian AI assistant."
+                "content":"You are a helpful Persian AI assistant.""""
+اگر کاربر پرسید «سازنده‌ات کیست؟»، «چه کسی تو را ساخته؟» یا سوال مشابهی پرسید، پاسخ بده:
+«ID: @Ahmadrezamenati\nID my chanel: https://t.me/AIChatgptb \n.من توسط احمدرضا منتی ساخته و توسعه داده شده‌ام.»"""
 
         }
         ]+history,
