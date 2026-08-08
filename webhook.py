@@ -105,13 +105,14 @@ async def webhook(req: Request):
 
         user_id = update.message.chat.id
         text = update.message.text
+        print(f"NEW MESSAGE: user={user_id}, text={text}")
 
         if not await is_user_member(user_id):
         
                 keyboard = InlineKeyboardMarkup([
                     [
                         InlineKeyboardButton(
-                        "📢 عضویت در کانال",
+                        "📢 AI عضویت در کانال",
                         url="https://t.me/AIChatgptb"
                     )],
 
