@@ -118,7 +118,7 @@ async def webhook(req: Request):
                     [
                         InlineKeyboardButton(
                         "⚽ عضویت در Football Persian",
-                        url="https://t.me/FootballPersian"
+                        url="@FotballPersian"
                         )
                     ]
                 
