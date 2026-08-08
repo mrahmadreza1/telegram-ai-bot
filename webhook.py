@@ -76,7 +76,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    await bot.delete_webhook()
+
 
 
 app = FastAPI(lifespan=lifespan)
