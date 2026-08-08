@@ -38,9 +38,8 @@ async def is_user_member(user_id):
 
     return True
 
-
 async def send_formatted_message(chat_id, text):
-    # پیدا کردن کدهای داخل ``` ```
+
     parts = re.split(
         r"```(?:python)?\s*\n?(.*?)```",
         text,
@@ -52,26 +51,33 @@ async def send_formatted_message(chat_id, text):
         if not part.strip():
             continue
 
-        # بخش کد
         if i % 2 == 1:
+
             code = html.escape(part.strip())
 
-            await bot.send_message(
-                chat_id=chat_id,
-                text=f"<pre>{code}</pre>",
-                parse_mode="HTML"
-            )
+            # تقسیم کدهای خیلی طولانی
+            for start in range(0, len(code), 4000):
+                chunk = code[start:start + 4000]
 
-        # بخش متن معمولی
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text=f"<pre>{chunk}</pre>",
+                    parse_mode="HTML"
+                )
+
         else:
+
             message = html.escape(part.strip())
 
-            await bot.send_message(
-                chat_id=chat_id,
-                text=message,
-                parse_mode="HTML"
-            )
+            # تقسیم متن‌های خیلی طولانی
+            for start in range(0, len(message), 4000):
+                chunk = message[start:start + 4000]
 
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text=chunk,
+                    parse_mode="HTML"
+                )
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
