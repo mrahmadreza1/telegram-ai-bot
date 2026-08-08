@@ -115,7 +115,43 @@ async def webhook(req: Request):
 
 
 
+    # -----------------
 
+    if update.callback_query:
+
+        query = update.callback_query
+
+        user_id = query.from_user.id
+
+        if query.data == "check_membership":
+
+            member_status = await is_user_member(user_id)
+
+            if not member_status:
+
+                await query.answer(
+                    "❌ هنوز در هر دو کانال عضو نیستید.",
+                    show_alert=True
+                )
+
+                return {"ok": True}
+
+            await query.answer(
+                "✅ عضویت شما تأیید شد!"
+            )
+
+            await bot.send_message(
+                chat_id=user_id,
+                text=(
+                    "🎉 خوش آمدید!\n\n"
+                    "عضویت شما با موفقیت تأیید شد. ✅\n"
+                    "از حالا می‌توانید از ربات استفاده کنید. 🤖\n\n"
+                    "پیام خود را ارسال کنید..."
+                )
+            )
+
+            return {"ok": True}
+# ---------------
 
     if update.message:
 
@@ -141,6 +177,12 @@ async def webhook(req: Request):
                     InlineKeyboardButton(
                         "⚽ عضویت در Football Persian",
                         url="https://t.me/FotballPersian"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "✅ تأیید عضویت",
+                        callback_data="check_membership"
                     )
                 ]
             ])
